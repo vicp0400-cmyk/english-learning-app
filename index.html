@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>English Practice – Asking for Information</title>
+<style>
+:root{--blue:#2457a6;--pale:#edf4ff;--green:#16834a;--red:#bd3030;--ink:#182235}
+*{box-sizing:border-box}body{margin:0;background:#f4f6fa;color:var(--ink);font-family:Arial,Tahoma,sans-serif;line-height:1.6}
+header{background:linear-gradient(120deg,#173b78,#3977c8);color:white;padding:24px 16px;text-align:center}
+header h1{font-size:clamp(23px,5vw,32px);margin:0 0 5px}header p{margin:0}
+main{max-width:850px;margin:18px auto;padding:0 12px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+button,.tab{border:0;border-radius:10px;padding:11px 15px;font-size:16px;cursor:pointer}
+.tab{background:#e2e9f4;color:#19365f}.tab.active{background:var(--blue);color:#fff}
+.card{background:white;border-radius:15px;padding:18px;margin:12px 0;box-shadow:0 3px 14px #18223512}
+h2{font-size:22px;margin:0 0 12px;color:#173b78}
+.small{color:#667085;font-size:14px}
+.en{direction:ltr;text-align:left;font-weight:600}
+.vocab{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px}
+.word{border:1px solid #e0e6ef;border-radius:10px;padding:10px;background:#fbfcff}
+.word b{display:block;direction:ltr;text-align:left;color:#173b78}
+.question{border-top:1px solid #e7ebf1;padding:14px 0}
+.question:first-child{border-top:0}
+.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:10px}
+.options button,.wordbank button{background:#edf2f9;color:#1c2d48;border:1px solid #d5dfed}
+button:disabled{opacity:.7;cursor:default}
+button.correct{background:#e1f5e9!important;border-color:#16834a!important;color:#11683b!important}
+button.wrong{background:#fde8e8!important;border-color:#bd3030!important;color:#982222!important}
+.action{background:var(--blue);color:white;margin-top:12px}
+.feedback{min-height:25px;font-weight:bold;margin-top:8px}
+.good{color:var(--green)}.bad{color:var(--red)}
+input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:9px;font-size:17px;margin-top:8px;direction:ltr;text-align:left}
+.wordbank{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.answer{min-height:48px;border:2px dashed #b8c6d9;border-radius:10px;padding:8px;direction:ltr;text-align:left}
+.score{font-size:20px;font-weight:bold;color:#173b78}
+.hidden{display:none}
+footer{text-align:center;color:#667085;padding:20px}
+</style>
+</head>
+<body>
+<header>
+<h1>Asking for Information</h1>
+<p>طلب المعلومات – English Interactive Practice</p>
+</header>
+<main>
+<div class="tabs">
+<button class="tab active" data-page="vocab">الكلمات</button>
+<button class="tab" data-page="mcq">اختر الإجابة</button>
+<button class="tab" data-page="fill">املأ الفراغ</button>
+<button class="tab" data-page="order">رتّب الكلمات</button>
+<button class="tab" data-page="test">الاختبار النهائي</button>
+</div>
+
+<section id="vocab" class="page card">
+<h2>Vocabulary – مفردات المتجر</h2>
+<p class="small">اقرأ الكلمات ومعانيها، ثم انتقل إلى التمارين.</p>
+<div class="vocab" id="vocabList"></div>
+</section>
+
+<section id="mcq" class="page card hidden">
+<h2>Choose the correct answer – اختر الإجابة الصحيحة</h2>
+<div id="mcqArea"></div>
+</section>
+
+<section id="fill" class="page card hidden">
+<h2>Fill in the blanks – املأ الفراغات</h2>
+<div id="fillArea"></div>
+</section>
+
+<section id="order" class="page card hidden">
+<h2>Arrange the words – رتّب الكلمات</h2>
+<p class="small">اضغط الكلمات بالترتيب الصحيح لتكوين الجملة.</p>
+<div id="orderArea"></div>
+</section>
+
+<section id="test" class="page card hidden">
+<h2>Final Test – الاختبار النهائي</h2>
+<p>أجب عن الأسئلة العشرة ثم اضغط «احسب النتيجة».</p>
+<div id="testArea"></div>
+<button class="action" id="gradeTest">احسب النتيجة</button>
+<div id="testResult" class="feedback"></div>
+</section>
+<footer>تعلم خطوة بخطوة – Keep practising!</footer>
+</main>
+<script>
+const vocab=[
+["bookshop","مكتبة"],["carpets","سجاد"],["coffee shop","مقهى"],["electrical goods","أدوات كهربائية"],["flower shop","محل زهور"],["furniture","أثاث"],["gardening","مستلزمات الحديقة"],["ladies' wear","ملابس نسائية"],["lighting","الإضاءة"],["pharmacy","صيدلية"],["sports goods","أدوات رياضية"],["supermarket","متجر كبير"],["bathroom equipment","معدات الحمام"],["beauty shop","محل تجميل"],["bedding","مفروشات السرير"],["cassettes & CDs","أشرطة وأقراص"],["crockery & glass","أواني فخارية وزجاجية"],["cutlery","لوازم المائدة"],["fabrics","أقمشة"],["kitchen equipment","معدات المطبخ"],["menswear","ملابس رجالية"],["photography","تصوير"],["radio & TV","راديو وتلفاز"],["toys","ألعاب"]];
+document.getElementById('vocabList').innerHTML=vocab.map(v=>`<div class="word"><b>${v[0]}</b>${v[1]}</div>`).join('');
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));b.classList.add('active');document.getElementById(b.dataset.page).classList.remove('hidden')}));
+const mcqs=[
+["Where can I buy a television?","Radio & TV","Bookshop",["Radio & TV","Bookshop","Pharmacy"]],
+["You can buy a shirt in the ... department.","Menswear","Carpets",["Menswear","Carpets","Photography"]],
+["I need to buy medicine from the ...","Pharmacy","Flower shop",["Pharmacy","Flower shop","Furniture"]],
+["We can buy flowers from the ... shop.","Flower","Coffee",["Flower","Coffee","Beauty"]],
+["Go to the ... to buy some books.","Bookshop","Supermarket",["Bookshop","Supermarket","Lighting"]],
+["Where can I buy toys?","Toys department","Gardening department",["Toys department","Gardening department","Cutlery department"]]
+];
+function renderMCQ(target,items){target.innerHTML=items.map((q,i)=>`<div class="question"><div class="en">${i+1}. ${q[0]}</div><div class="options">${q[3].map(o=>`<button data-answer="${o}" data-correct="${q[1]}">${o}</button>`).join('')}</div><div class="feedback"></div></div>`).join('');target.querySelectorAll('.options button').forEach(btn=>btn.onclick=()=>{let parent=btn.closest('.question');if(parent.dataset.done)return;parent.dataset.done='1';let ok=btn.dataset.answer===btn.dataset.correct;btn.classList.add(ok?'correct':'wrong');if(!ok)parent.querySelectorAll('button').forEach(x=>{if(x.dataset.answer===x.dataset.correct)x.classList.add('correct')});parent.querySelector('.feedback').textContent=ok?'إجابة صحيحة! ✓':'حاول مرة أخرى. الإجابة الصحيحة: '+btn.dataset.correct;parent.querySelector('.feedback').className='feedback '+(ok?'good':'bad')})}
+renderMCQ(document.getElementById('mcqArea'),mcqs);
+const fills=[
+["Where can I buy some carpets? In the ______ department.","carpets"],
+["You can buy a shirt in the ______ department.","menswear"],
+["I need to buy medicine from the ______.","pharmacy"],
+["We can buy flowers from the ______ shop.","flower"],
+["Go to the ______ to buy some books.","bookshop"],
+["You can buy a new bed in the ______ department.","furniture"],
+["You can buy toys in the ______ department.","toys"]
+];
+document.getElementById('fillArea').innerHTML=fills.map((q,i)=>`<div class="question"><div class="en">${i+1}. ${q[0]}</div><input id="f${i}" placeholder="Type your answer"><button class="action" onclick="checkFill(${i})">تحقق</button><div id="fr${i}" class="feedback"></div></div>`).join('');
+window.checkFill=i=>{let val=document.getElementById('f'+i).value.trim().toLowerCase();let ok=val===fills[i][1];let r=document.getElementById('fr'+i);r.textContent=ok?'صحيح! ✓':'ليس تماماً. الإجابة: '+fills[i][1];r.className='feedback '+(ok?'good':'bad')};
+const orders=[
+["Where can I buy toys?","Where","can","I","buy","toys?"],
+["In the Pharmacy on the ground floor.","In","the","Pharmacy","on","the","ground","floor."],
+["Where can I buy some carpets?","Where","can","I","buy","some","carpets?"]
+];
+let orderIndex=0,chosen=[];
+function showOrder(){let q=orders[orderIndex];chosen=[];let words=q.slice(1).map((w,i)=>({w,i})).sort(()=>Math.random()-.5);let area=document.getElementById('orderArea');area.innerHTML=`<div class="small">الجملة ${orderIndex+1} من ${orders.length}</div><div id="chosen" class="answer"></div><div id="bank" class="wordbank"></div><div id="orderFeedback" class="feedback"></div><button class="action" id="checkOrder">تحقق</button> <button id="nextOrder">الجملة التالية</button>`;let bank=area.querySelector('#bank');words.forEach(x=>{let b=document.createElement('button');b.textContent=x.w;b.onclick=()=>{if(b.disabled)return;b.disabled=true;chosen.push(x);area.querySelector('#chosen').textContent=chosen.map(a=>a.w).join(' ')};bank.appendChild(b)});area.querySelector('#checkOrder').onclick=()=>{let ok=chosen.map(x=>x.w).join(' ' )===q[0];area.querySelector('#orderFeedback').textContent=ok?'ممتاز! ترتيب صحيح ✓':'ليس صحيحاً بعد، حاول إعادة ترتيب الكلمات.';area.querySelector('#orderFeedback').className='feedback '+(ok?'good':'bad')};area.querySelector('#nextOrder').onclick=()=>{orderIndex=(orderIndex+1)%orders.length;showOrder()}}
+showOrder();
+const tests=[
+["The ______ department sells books.","bookshop",["bookshop","pharmacy","toys"]],
+["You can buy medicine at the ______.","pharmacy",["flower shop","pharmacy","furniture"]],
+["Where can I buy carpets?","Carpets department",["Carpets department","Photography department","Toys department"]],
+["Toys are on the ______ floor.","first",["ground","first","second"]],
+["A camera is in the ______ department.","Photography",["Gardening","Photography","Menswear"]],
+["A new bed is in the ______ department.","Furniture",["Furniture","Cutlery","Bookshop"]],
+["Flowers are sold at the ______ shop.","flower",["coffee","flower","beauty"]],
+["Cups and plates are in ______ and glass.","Crockery",["Crockery","Radio","Sports"]],
+["A television is in Radio & ______.","TV",["TV","CDs","Carpets"]],
+["A spade is in the ______ department.","Gardening",["Gardening","Bedding","Lighting"]]
+];
+document.getElementById('testArea').innerHTML=tests.map((q,i)=>`<div class="question"><div class="en">${i+1}. ${q[0]}</div><div class="options">${q[2].map(o=>`<label style="background:#f0f4fa;padding:9px;border-radius:8px;direction:ltr;text-align:left"><input style="width:auto;margin:0 5px" type="radio" name="t${i}" value="${o}">${o}</label>`).join('')}</div></div>`).join('');
+document.getElementById('gradeTest').onclick=()=>{let score=0,answered=0;tests.forEach((q,i)=>{let a=document.querySelector(`input[name="t${i}"]:checked`);if(a){answered++;if(a.value===q[1])score++}});document.getElementById('testResult').textContent=`نتيجتك: ${score} من ${tests.length} — أجبت عن ${answered} أسئلة.`;document.getElementById('testResult').className='feedback score'};
+</script>
+</body>
+</html>
